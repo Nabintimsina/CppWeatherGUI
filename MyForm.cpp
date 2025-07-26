@@ -1,65 +1,61 @@
 #include "MyForm.h"
-using namespace System::Net;
-using namespace System::IO;
-using namespace System::Web::Script::Serialization;
+#include "json.hpp"
+#include <string>
+#include <msclr/marshal_cppstd.h>
 
+using json = nlohmann::json;
 using namespace System;
 using namespace System::Windows::Forms;
+using namespace System::Net;
+using namespace System::IO;
 
-void main(array<System::String ^> ^args)
+// Entry point
+void main(array<System::String^>^ args)
 {
-	Application::EnableVisualStyles();
-	Application::SetCompatibleTextRenderingDefault(false);
-	
-	// Create the main form and run it
-	CppWeatherGUI::MyForm form;
-	Application::Run(%form);
+    Application::EnableVisualStyles();
+    Application::SetCompatibleTextRenderingDefault(false);
+    CppWeatherGUI::MyForm form;
+    Application::Run(% form);
 }
-
-
 
 System::Void CppWeatherGUI::MyForm::Checkweather_Click(System::Object^ sender, System::EventArgs^ e)
 {
     String^ city = maskedTextBox1->Text;
-    String^ apiKey = "a02356cb388ab8415bc127df326b2388"; // Replace with your actual API key
+    String^ apiKey = "a02356cb388ab8415bc127df326b2388";
     String^ url = "http://api.openweathermap.org/data/2.5/weather?q=" + city + "&appid=" + apiKey + "&units=metric";
 
     try
     {
-        HttpWebRequest^ request = dynamic_cast<HttpWebRequest^>(WebRequest::Create(url));
-        HttpWebResponse^ response = dynamic_cast<HttpWebResponse^>(request->GetResponse());
-        Stream^ dataStream = response->GetResponseStream();
-        StreamReader^ reader = gcnew StreamReader(dataStream);
+        // Create and send HTTP request
+        auto request = dynamic_cast<HttpWebRequest^>(WebRequest::Create(url));
+        auto response = dynamic_cast<HttpWebResponse^>(request->GetResponse());
+        auto dataStream = response->GetResponseStream();
+        auto reader = gcnew StreamReader(dataStream);
         String^ responseFromServer = reader->ReadToEnd();
 
-        // Parse JSON and update textBoxtemp and textBoxweather
-        // Requires reference to System.Web.Extensions for JavaScriptSerializer
-        auto serializer = gcnew System::Web::Script::Serialization::JavaScriptSerializer();
-        auto jsonObj = safe_cast<System::Collections::Generic::Dictionary<String^, Object^>^>(serializer->DeserializeObject(responseFromServer));
+        // Convert System::String^ to std::string for nlohmann::json
+        std::string jsonStr = msclr::interop::marshal_as<std::string>(responseFromServer);
 
-        // Extract temperature
-       // Extract temperature
-        auto mainObj = safe_cast<System::Collections::Generic::Dictionary<String^, Object^>^>(jsonObj["main"]);
-        double temp = System::Convert::ToDouble(mainObj["temp"]);
-        textBoxtemp->Text = temp.ToString() + " °C";
+        // Parse JSON using nlohmann::json
+        json j = json::parse(jsonStr);
 
-        // Extract weather description
-        auto weatherArr = safe_cast<cli::array<Object^>^>(jsonObj["weather"]);
-        String^ description = "";
-        if (weatherArr != nullptr && weatherArr->Length > 0) {
-            auto weatherObj = safe_cast<System::Collections::Generic::Dictionary<String^, Object^>^>(weatherArr[0]);
-            if (weatherObj->ContainsKey("description")) {
-                description = safe_cast<String^>(weatherObj["description"]);
-            }
-        }
-        textBoxweather->Text = description;
+        // Extract values
+        double temp = j["main"]["temp"];
+        std::string description = j["weather"][0]["description"];
 
+        // Set values to textboxes
+        textBoxtemp->Text = temp.ToString("F1") + " °C";
+        textBoxweather->Text = gcnew String(description.c_str());
+
+        // Clean up
         reader->Close();
         dataStream->Close();
         response->Close();
     }
     catch (Exception^ ex)
     {
+        textBoxtemp->Text = "";
+        textBoxweather->Text = "";
         MessageBox::Show("Error: " + ex->Message);
     }
 }

@@ -14,6 +14,7 @@ namespace CppWeatherGUI {
 	/// <summary>
 	/// Summary for MyForm
 	/// </summary>
+	/// 
 	public ref class MyForm : public System::Windows::Forms::Form
 	{
 	public:
@@ -132,9 +133,9 @@ namespace CppWeatherGUI {
 				static_cast<System::Byte>(0)));
 			this->textBoxtemp->Location = System::Drawing::Point(300, 385);
 			this->textBoxtemp->Name = L"textBoxtemp";
+			this->textBoxtemp->ReadOnly = true;
 			this->textBoxtemp->Size = System::Drawing::Size(101, 35);
 			this->textBoxtemp->TabIndex = 6;
-			this->textBoxtemp->ReadOnly = true;
 			// 
 			// textBoxweather
 			// 
@@ -142,9 +143,9 @@ namespace CppWeatherGUI {
 				static_cast<System::Byte>(0)));
 			this->textBoxweather->Location = System::Drawing::Point(257, 431);
 			this->textBoxweather->Name = L"textBoxweather";
+			this->textBoxweather->ReadOnly = true;
 			this->textBoxweather->Size = System::Drawing::Size(229, 35);
 			this->textBoxweather->TabIndex = 7;
-			this->textBoxweather->ReadOnly = true;
 			// 
 			// MyForm
 			// 
