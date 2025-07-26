@@ -41,6 +41,7 @@ namespace CppWeatherGUI {
 		System::Windows::Forms::MaskedTextBox^ maskedTextBox1;
 		System::Windows::Forms::TextBox^ textBoxtemp;
 		System::Windows::Forms::TextBox^ textBoxweather;
+	private: System::Windows::Forms::PictureBox^ pictureBox1;
 
 		System::ComponentModel::Container^ components;
 
@@ -50,6 +51,7 @@ namespace CppWeatherGUI {
 #pragma region Windows Form Designer generated code
 		void InitializeComponent(void)
 		{
+			System::ComponentModel::ComponentResourceManager^ resources = (gcnew System::ComponentModel::ComponentResourceManager(MyForm::typeid));
 			this->label1 = (gcnew System::Windows::Forms::Label());
 			this->cityname = (gcnew System::Windows::Forms::Label());
 			this->temperature = (gcnew System::Windows::Forms::Label());
@@ -58,6 +60,8 @@ namespace CppWeatherGUI {
 			this->maskedTextBox1 = (gcnew System::Windows::Forms::MaskedTextBox());
 			this->textBoxtemp = (gcnew System::Windows::Forms::TextBox());
 			this->textBoxweather = (gcnew System::Windows::Forms::TextBox());
+			this->pictureBox1 = (gcnew System::Windows::Forms::PictureBox());
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->pictureBox1))->BeginInit();
 			this->SuspendLayout();
 			// 
 			// label1
@@ -147,12 +151,24 @@ namespace CppWeatherGUI {
 			this->textBoxweather->Size = System::Drawing::Size(229, 35);
 			this->textBoxweather->TabIndex = 7;
 			// 
+			// pictureBox1
+			// 
+			this->pictureBox1->ErrorImage = (cli::safe_cast<System::Drawing::Image^>(resources->GetObject(L"pictureBox1.ErrorImage")));
+			this->pictureBox1->Image = (cli::safe_cast<System::Drawing::Image^>(resources->GetObject(L"pictureBox1.Image")));
+			this->pictureBox1->InitialImage = (cli::safe_cast<System::Drawing::Image^>(resources->GetObject(L"pictureBox1.InitialImage")));
+			this->pictureBox1->Location = System::Drawing::Point(519, 198);
+			this->pictureBox1->Name = L"pictureBox1";
+			this->pictureBox1->Size = System::Drawing::Size(438, 333);
+			this->pictureBox1->TabIndex = 8;
+			this->pictureBox1->TabStop = false;
+			// 
 			// MyForm
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(9, 20);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
 			this->BackColor = System::Drawing::SystemColors::Control;
 			this->ClientSize = System::Drawing::Size(1032, 643);
+			this->Controls->Add(this->pictureBox1);
 			this->Controls->Add(this->textBoxweather);
 			this->Controls->Add(this->textBoxtemp);
 			this->Controls->Add(this->maskedTextBox1);
@@ -163,13 +179,17 @@ namespace CppWeatherGUI {
 			this->Controls->Add(this->label1);
 			this->Name = L"MyForm";
 			this->Text = L"MyForm";
+			this->Load += gcnew System::EventHandler(this, &MyForm::MyForm_Load);
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->pictureBox1))->EndInit();
 			this->ResumeLayout(false);
 			this->PerformLayout();
 
 		}
 #pragma endregion
 
-	};
+	private: System::Void MyForm_Load(System::Object^ sender, System::EventArgs^ e) {
+	}
+};
 
 
 }
